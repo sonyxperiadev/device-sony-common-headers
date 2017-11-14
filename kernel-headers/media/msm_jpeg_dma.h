@@ -20,11 +20,9 @@
 #define __UAPI_MSM_JPEG_DMA__
 #include <linux/videodev2.h>
 #define V4L2_CID_JPEG_DMA_SPEED (V4L2_CID_PRIVATE_BASE)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CID_JPEG_DMA_MAX_DOWN_SCALE (V4L2_CID_PRIVATE_BASE + 1)
 struct msm_jpeg_dma_buff {
   int32_t fd;
   uint32_t offset;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

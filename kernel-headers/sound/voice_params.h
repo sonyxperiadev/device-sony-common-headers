@@ -20,11 +20,9 @@
 #define __VOICE_PARAMS_H__
 #include <linux/types.h>
 #include <sound/asound.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum voice_lch_mode {
   VOICE_LCH_START = 1,
   VOICE_LCH_STOP
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SNDRV_VOICE_IOCTL_LCH _IOW('U', 0x00, enum voice_lch_mode)
 #endif
