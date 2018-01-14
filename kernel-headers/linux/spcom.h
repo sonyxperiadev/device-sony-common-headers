@@ -25,6 +25,7 @@
 #ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
 #endif
+#define SPCOM_MAX_CHANNELS 0x20
 #define SPCOM_CHANNEL_NAME_SIZE 32
 #define SPCOM_GET_NEXT_REQUEST_SIZE (PAGE_SIZE - 1)
 enum spcom_cmd_id {

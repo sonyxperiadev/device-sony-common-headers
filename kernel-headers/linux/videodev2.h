@@ -52,12 +52,12 @@ enum v4l2_buf_type {
   V4L2_BUF_TYPE_VBI_OUTPUT = 5,
   V4L2_BUF_TYPE_SLICED_VBI_CAPTURE = 6,
   V4L2_BUF_TYPE_SLICED_VBI_OUTPUT = 7,
-V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,
-V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
-V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE = 10,
-V4L2_BUF_TYPE_SDR_CAPTURE = 11,
-V4L2_BUF_TYPE_SDR_OUTPUT = 12,
-V4L2_BUF_TYPE_PRIVATE = 0x80,
+  V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,
+  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
+  V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE = 10,
+  V4L2_BUF_TYPE_SDR_CAPTURE = 11,
+  V4L2_BUF_TYPE_SDR_OUTPUT = 12,
+  V4L2_BUF_TYPE_PRIVATE = 0x80,
 };
 #define V4L2_TYPE_IS_MULTIPLANAR(type) ((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
 #define V4L2_TYPE_IS_OUTPUT(type) ((type) == V4L2_BUF_TYPE_VIDEO_OUTPUT || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY || (type) == V4L2_BUF_TYPE_VBI_OUTPUT || (type) == V4L2_BUF_TYPE_SLICED_VBI_OUTPUT || (type) == V4L2_BUF_TYPE_SDR_OUTPUT)
@@ -467,41 +467,41 @@ struct v4l2_jpegcompression {
 #define V4L2_JPEG_MARKER_APP (1 << 7)
 };
 struct v4l2_requestbuffers {
-__u32 count;
-__u32 type;
-__u32 memory;
-__u32 reserved[2];
+  __u32 count;
+  __u32 type;
+  __u32 memory;
+  __u32 reserved[2];
 };
 struct v4l2_plane {
-__u32 bytesused;
-__u32 length;
-union {
-  __u32 mem_offset;
-  unsigned long userptr;
-  __s32 fd;
-} m;
-__u32 data_offset;
-__u32 reserved[11];
+  __u32 bytesused;
+  __u32 length;
+  union {
+    __u32 mem_offset;
+    unsigned long userptr;
+    __s32 fd;
+  } m;
+  __u32 data_offset;
+  __u32 reserved[11];
 };
 struct v4l2_buffer {
-__u32 index;
-__u32 type;
-__u32 bytesused;
-__u32 flags;
-__u32 field;
-struct timeval timestamp;
-struct v4l2_timecode timecode;
-__u32 sequence;
-__u32 memory;
-union {
-  __u32 offset;
-  unsigned long userptr;
-  struct v4l2_plane * planes;
-  __s32 fd;
-} m;
-__u32 length;
-__u32 reserved2;
-__u32 reserved;
+  __u32 index;
+  __u32 type;
+  __u32 bytesused;
+  __u32 flags;
+  __u32 field;
+  struct timeval timestamp;
+  struct v4l2_timecode timecode;
+  __u32 sequence;
+  __u32 memory;
+  union {
+    __u32 offset;
+    unsigned long userptr;
+    struct v4l2_plane * planes;
+    __s32 fd;
+  } m;
+  __u32 length;
+  __u32 reserved2;
+  __u32 reserved;
 };
 #define V4L2_BUF_FLAG_MAPPED 0x00000001
 #define V4L2_BUF_FLAG_QUEUED 0x00000002
@@ -892,6 +892,7 @@ struct v4l2_querymenu {
 #define V4L2_CTRL_FLAG_VOLATILE 0x0080
 #define V4L2_CTRL_FLAG_HAS_PAYLOAD 0x0100
 #define V4L2_CTRL_FLAG_EXECUTE_ON_WRITE 0x0200
+#define V4L2_CTRL_FLAG_MODIFY_LAYOUT 0X0400
 #define V4L2_CTRL_FLAG_NEXT_CTRL 0x80000000
 #define V4L2_CTRL_FLAG_NEXT_COMPOUND 0x40000000
 #define V4L2_CID_MAX_CTRLS 1024
@@ -1201,6 +1202,19 @@ struct v4l2_streamparm {
 #define V4L2_EVENT_MSM_VIDC_HW_OVERLOAD (V4L2_EVENT_MSM_VIDC_START + 8)
 #define V4L2_EVENT_MSM_VIDC_MAX_CLIENTS (V4L2_EVENT_MSM_VIDC_START + 9)
 #define V4L2_EVENT_MSM_VIDC_HW_UNSUPPORTED (V4L2_EVENT_MSM_VIDC_START + 10)
+#define V4L2_EVENT_MSM_BA_PRIVATE_EVENT_BASE (V4L2_EVENT_PRIVATE_START + 0x00005000)
+#define V4L2_EVENT_MSM_BA_START V4L2_EVENT_MSM_BA_PRIVATE_EVENT_BASE
+#define V4L2_EVENT_MSM_BA_DEVICE_AVAILABLE (V4L2_EVENT_MSM_BA_START + 1)
+#define V4L2_EVENT_MSM_BA_DEVICE_UNAVAILABLE (V4L2_EVENT_MSM_BA_START + 2)
+#define V4L2_EVENT_MSM_BA_PORT_SETTINGS_CHANGED (V4L2_EVENT_MSM_BA_START + 3)
+#define V4L2_EVENT_MSM_BA_SIGNAL_IN_LOCK (V4L2_EVENT_MSM_BA_START + 4)
+#define V4L2_EVENT_MSM_BA_SIGNAL_LOST_LOCK (V4L2_EVENT_MSM_BA_START + 5)
+#define V4L2_EVENT_MSM_BA_SOURCE_CHANGE (V4L2_EVENT_MSM_BA_START + 6)
+#define V4L2_EVENT_MSM_BA_HDMI_HPD (V4L2_EVENT_MSM_BA_START + 7)
+#define V4L2_EVENT_MSM_BA_HDMI_CEC_MESSAGE (V4L2_EVENT_MSM_BA_START + 8)
+#define V4L2_EVENT_MSM_BA_CP (V4L2_EVENT_MSM_BA_START + 9)
+#define V4L2_EVENT_MSM_BA_CABLE_DETECT (V4L2_EVENT_MSM_BA_START + 10)
+#define V4L2_EVENT_MSM_BA_ERROR (V4L2_EVENT_MSM_BA_START + 11)
 struct v4l2_event_vsync {
   __u8 field;
 } __attribute__((packed));
@@ -1375,4 +1389,9 @@ struct v4l2_create_buffers {
 #define VIDIOC_DBG_G_CHIP_INFO _IOWR('V', 102, struct v4l2_dbg_chip_info)
 #define VIDIOC_QUERY_EXT_CTRL _IOWR('V', 103, struct v4l2_query_ext_ctrl)
 #define BASE_VIDIOC_PRIVATE 192
+#define VIDIOC_HDMI_RX_CEC_S_LOGICAL _IOW('V', BASE_VIDIOC_PRIVATE + 0, int)
+#define VIDIOC_HDMI_RX_CEC_CLEAR_LOGICAL _IO('V', BASE_VIDIOC_PRIVATE + 1)
+#define VIDIOC_HDMI_RX_CEC_G_PHYSICAL _IOR('V', BASE_VIDIOC_PRIVATE + 2, int)
+#define VIDIOC_HDMI_RX_CEC_G_CONNECTED _IOR('V', BASE_VIDIOC_PRIVATE + 3, int)
+#define VIDIOC_HDMI_RX_CEC_S_ENABLE _IOR('V', BASE_VIDIOC_PRIVATE + 4, int)
 #endif

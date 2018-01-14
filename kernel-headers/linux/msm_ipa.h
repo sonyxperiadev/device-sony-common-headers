@@ -25,6 +25,9 @@
 #include <linux/types.h>
 #include <linux/if_ether.h>
 #define IPA_IOC_MAGIC 0xCF
+#define IPA_DEV_NAME "/dev/ipa"
+#define IPA_NAT_DEV_NAME "ipaNatTable"
+#define IPA_IPV6CT_DEV_NAME "ipaIpv6CTTable"
 #define IPA_DFLT_RT_TBL_NAME "ipa_dflt_rt"
 #define IPA_IOCTL_ADD_HDR 0
 #define IPA_IOCTL_DEL_HDR 1
@@ -50,7 +53,9 @@
 #define IPA_IOCTL_SET_FLT 21
 #define IPA_IOCTL_ALLOC_NAT_MEM 22
 #define IPA_IOCTL_V4_INIT_NAT 23
-#define IPA_IOCTL_NAT_DMA 24
+#define IPA_IOCTL_TABLE_DMA_CMD 24
+#define IPA_IOCTL_NAT_DMA IPA_IOCTL_TABLE_DMA_CMD
+#define IPA_IOCTL_INIT_IPV6CT_TABLE 25
 #define IPA_IOCTL_V4_DEL_NAT 26
 #define IPA_IOCTL_PULL_MSG 27
 #define IPA_IOCTL_GET_NAT_OFFSET 28
@@ -71,7 +76,13 @@
 #define IPA_IOCTL_ADD_RT_RULE_AFTER 43
 #define IPA_IOCTL_ADD_FLT_RULE_AFTER 44
 #define IPA_IOCTL_GET_HW_VERSION 45
-#define IPA_IOCTL_MAX 46
+#define IPA_IOCTL_ADD_RT_RULE_EXT 46
+#define IPA_IOCTL_NAT_MODIFY_PDN 47
+#define IPA_IOCTL_ALLOC_NAT_TABLE 48
+#define IPA_IOCTL_ALLOC_IPV6CT_TABLE 49
+#define IPA_IOCTL_DEL_NAT_TABLE 50
+#define IPA_IOCTL_DEL_IPV6CT_TABLE 51
+#define IPA_IOCTL_MAX 52
 #define IPA_HDR_MAX_SIZE 64
 #define IPA_RESOURCE_NAME_MAX 32
 #define IPA_NUM_PROPS_MAX 35
@@ -100,6 +111,7 @@
 #define IPA_FLT_MAC_SRC_ADDR_802_3 (1ul << 19)
 #define IPA_FLT_MAC_DST_ADDR_802_3 (1ul << 20)
 #define IPA_FLT_MAC_ETHER_TYPE (1ul << 21)
+#define IPA_MAX_PDN_NUM 5
 enum ipa_client_type {
   IPA_CLIENT_PROD,
   IPA_CLIENT_HSIC1_PROD = IPA_CLIENT_PROD,
@@ -239,9 +251,17 @@ enum ipa_tethering_stats_event {
   IPA_TETHERING_STATS_UPDATE_STATS = IPA_ECM_EVENT_MAX,
   IPA_TETHERING_STATS_UPDATE_NETWORK_STATS,
   IPA_TETHERING_STATS_EVENT_MAX,
-  IPA_EVENT_MAX_NUM = IPA_TETHERING_STATS_EVENT_MAX
 };
-#define IPA_EVENT_MAX ((int) IPA_EVENT_MAX_NUM)
+enum ipa_quota_event {
+  IPA_QUOTA_REACH = IPA_TETHERING_STATS_EVENT_MAX,
+  IPA_QUOTA_EVENT_MAX,
+};
+enum ipa_ssr_event {
+  IPA_SSR_BEFORE_SHUTDOWN = IPA_QUOTA_EVENT_MAX,
+  IPA_SSR_AFTER_POWERUP,
+  IPA_SSR_EVENT_MAX
+};
+#define IPA_EVENT_MAX_NUM ((int) IPA_SSR_EVENT_MAX)
 enum ipa_rm_resource_name {
   IPA_RM_RESOURCE_PROD = 0,
   IPA_RM_RESOURCE_Q6_PROD = IPA_RM_RESOURCE_PROD,
@@ -278,8 +298,10 @@ enum ipa_hw_type {
   IPA_HW_v3_1 = 11,
   IPA_HW_v3_5 = 12,
   IPA_HW_v3_5_1 = 13,
-  IPA_HW_MAX
+  IPA_HW_v4_0 = 14,
 };
+#define IPA_HW_MAX (IPA_HW_v4_0 + 1)
+#define IPA_HW_v4_0 IPA_HW_v4_0
 struct ipa_rule_attrib {
   uint32_t attrib_mask;
   uint16_t src_port_lo;
@@ -385,6 +407,8 @@ struct ipa_flt_rule {
   uint8_t max_prio;
   uint8_t hashable;
   uint16_t rule_id;
+  uint8_t set_metadata;
+  uint8_t pdn_idx;
 };
 enum ipa_hdr_l2_type {
   IPA_HDR_L2_NONE,
@@ -614,6 +638,10 @@ struct ipa_ioc_nat_alloc_mem {
   size_t size;
   off_t offset;
 };
+struct ipa_ioc_nat_ipv6ct_table_alloc {
+  size_t size;
+  off_t offset;
+};
 struct ipa_ioc_v4_nat_init {
   uint8_t tbl_index;
   uint32_t ipv4_rules_offset;
@@ -624,9 +652,19 @@ struct ipa_ioc_v4_nat_init {
   uint16_t expn_table_entries;
   uint32_t ip_addr;
 };
+struct ipa_ioc_ipv6ct_init {
+  uint8_t tbl_index;
+  uint32_t base_table_offset;
+  uint32_t expn_table_offset;
+  uint16_t table_entries;
+  uint16_t expn_table_entries;
+};
 struct ipa_ioc_v4_nat_del {
   uint8_t table_index;
   uint32_t public_ip_addr;
+};
+struct ipa_ioc_nat_ipv6ct_table_del {
+  uint8_t table_index;
 };
 struct ipa_ioc_nat_dma_one {
   uint8_t table_index;
@@ -637,6 +675,12 @@ struct ipa_ioc_nat_dma_one {
 struct ipa_ioc_nat_dma_cmd {
   uint8_t entries;
   struct ipa_ioc_nat_dma_one dma[0];
+};
+struct ipa_ioc_nat_pdn_entry {
+  uint8_t pdn_index;
+  uint32_t public_ip;
+  uint32_t src_metadata;
+  uint32_t dst_metadata;
 };
 struct ipa_msg_meta {
   uint8_t msg_type;
@@ -718,10 +762,17 @@ enum ipacm_client_enum {
 #define IPA_IOC_GET_HDR _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_GET_HDR, struct ipa_ioc_get_hdr *)
 #define IPA_IOC_PUT_HDR _IOW(IPA_IOC_MAGIC, IPA_IOCTL_PUT_HDR, uint32_t)
 #define IPA_IOC_ALLOC_NAT_MEM _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ALLOC_NAT_MEM, struct ipa_ioc_nat_alloc_mem *)
+#define IPA_IOC_ALLOC_NAT_TABLE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ALLOC_NAT_TABLE, struct ipa_ioc_nat_ipv6ct_table_alloc *)
+#define IPA_IOC_ALLOC_IPV6CT_TABLE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ALLOC_IPV6CT_TABLE, struct ipa_ioc_nat_ipv6ct_table_alloc *)
 #define IPA_IOC_V4_INIT_NAT _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_V4_INIT_NAT, struct ipa_ioc_v4_nat_init *)
+#define IPA_IOC_INIT_IPV6CT_TABLE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_INIT_IPV6CT_TABLE, struct ipa_ioc_ipv6ct_init *)
 #define IPA_IOC_NAT_DMA _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_NAT_DMA, struct ipa_ioc_nat_dma_cmd *)
+#define IPA_IOC_TABLE_DMA_CMD _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_TABLE_DMA_CMD, struct ipa_ioc_nat_dma_cmd *)
 #define IPA_IOC_V4_DEL_NAT _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_V4_DEL_NAT, struct ipa_ioc_v4_nat_del *)
+#define IPA_IOC_DEL_NAT_TABLE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_NAT_TABLE, struct ipa_ioc_nat_ipv6ct_table_del *)
+#define IPA_IOC_DEL_IPV6CT_TABLE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_IPV6CT_TABLE, struct ipa_ioc_nat_ipv6ct_table_del *)
 #define IPA_IOC_GET_NAT_OFFSET _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_GET_NAT_OFFSET, uint32_t *)
+#define IPA_IOC_NAT_MODIFY_PDN _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_NAT_MODIFY_PDN, struct ipa_ioc_nat_pdn_entry *)
 #define IPA_IOC_SET_FLT _IOW(IPA_IOC_MAGIC, IPA_IOCTL_SET_FLT, uint32_t)
 #define IPA_IOC_PULL_MSG _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_PULL_MSG, struct ipa_msg_meta *)
 #define IPA_IOC_RM_ADD_DEPENDENCY _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_RM_ADD_DEPENDENCY, struct ipa_ioc_rm_dependency *)

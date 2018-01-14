@@ -57,6 +57,7 @@
 #define MDP_COMMIT_UPDATE_BRIGHTNESS 0x40
 #define MDP_COMMIT_CWB_EN 0x800
 #define MDP_COMMIT_CWB_DSPP 0x1000
+#define MDP_COMMIT_RECT_NUM 0x2000
 #define MDP_COMMIT_VERSION_1_0 0x00010000
 #define OUT_LAYER_COLOR_SPACE
 #define MDP_HDR_EOTF_SMTPE_ST2084 0x2
@@ -137,7 +138,8 @@ struct mdp_input_layer {
   struct mdp_layer_buffer buffer;
   void __user * pp_info;
   int error_code;
-  uint32_t reserved[6];
+  uint32_t rect_num;
+  uint32_t reserved[5];
 };
 struct mdp_output_layer {
   uint32_t flags;
@@ -291,5 +293,13 @@ struct mdp_hdr_stream {
   uint32_t bits_per_component;
   uint32_t content_type;
   uint32_t reserved[5];
+};
+#define HDR_ENABLE (1 << 0)
+#define HDR_DISABLE (1 << 1)
+#define HDR_RESET (1 << 2)
+#define DRM_MSM_EXT_PANEL_HDR_CTRL
+struct mdp_hdr_stream_ctrl {
+  __u8 hdr_state;
+  struct mdp_hdr_stream hdr_stream;
 };
 #endif
