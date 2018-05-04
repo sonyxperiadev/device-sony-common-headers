@@ -43,6 +43,7 @@
 #define FLASH_QUERY_CURRENT 1
 #define MSM_V4L2_PIX_FMT_META v4l2_fourcc('M', 'E', 'T', 'A')
 #define MSM_V4L2_PIX_FMT_META10 v4l2_fourcc('M', 'E', '1', '0')
+#define MSM_V4L2_PIX_FMT_META12 v4l2_fourcc('M', 'E', '1', '2')
 #define MSM_V4L2_PIX_FMT_SBGGR14 v4l2_fourcc('B', 'G', '1', '4')
 #define MSM_V4L2_PIX_FMT_SGBRG14 v4l2_fourcc('G', 'B', '1', '4')
 #define MSM_V4L2_PIX_FMT_SGRBG14 v4l2_fourcc('B', 'A', '1', '4')
