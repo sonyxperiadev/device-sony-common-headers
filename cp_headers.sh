@@ -72,6 +72,8 @@ UAPI_HEADERS="\
     media/msmb_isp.h\
     media/msmb_generic_buf_mgr.h\
     video/msm_hdmi_modes.h\
+    scsi/ufs/ufs.h \
+    scsi/ufs/ioctl.h \
     asm-generic/ioctls.h"
 
 for x in $STAGING_HEADERS; do \
