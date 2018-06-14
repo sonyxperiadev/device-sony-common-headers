@@ -85,11 +85,22 @@ enum {
   AFE_FB_SPKR_PROT_TH_VI_CAL_TYPE,
   AFE_FB_SPKR_PROT_EX_VI_CAL_TYPE,
   AFE_SIDETONE_IIR_CAL_TYPE,
+  AFE_LSM_TOPOLOGY_CAL_TYPE,
+  AFE_LSM_TX_CAL_TYPE,
+  ADM_LSM_TOPOLOGY_CAL_TYPE,
+  ADM_LSM_AUDPROC_CAL_TYPE,
   MAX_CAL_TYPES,
 };
 #define AFE_FB_SPKR_PROT_TH_VI_CAL_TYPE AFE_FB_SPKR_PROT_TH_VI_CAL_TYPE
 #define AFE_FB_SPKR_PROT_EX_VI_CAL_TYPE AFE_FB_SPKR_PROT_EX_VI_CAL_TYPE
 #define AFE_SIDETONE_IIR_CAL_TYPE AFE_SIDETONE_IIR_CAL_TYPE
+#define AFE_LSM_TOPOLOGY_CAL_TYPE AFE_LSM_TOPOLOGY_CAL_TYPE
+#define AFE_LSM_TX_CAL_TYPE AFE_LSM_TX_CAL_TYPE
+#define ADM_LSM_TOPOLOGY_CAL_TYPE ADM_LSM_TOPOLOGY_CAL_TYPE
+#define ADM_LSM_AUDPROC_CAL_TYPE ADM_LSM_AUDPROC_CAL_TYPE
+#define LSM_CAL_TYPES
+#define TOPOLOGY_SPECIFIC_CHANNEL_INFO
+#define MSM_SPKR_PROT_SPV3
 enum {
   VERSION_0_0,
 };
@@ -225,6 +236,10 @@ struct audio_cal_info_spk_prot_cfg {
   int32_t t0[SP_V2_NUM_MAX_SPKRS];
   uint32_t quick_calib_flag;
   uint32_t mode;
+#ifdef MSM_SPKR_PROT_SPV3
+  uint32_t sp_version;
+  int32_t limiter_th[SP_V2_NUM_MAX_SPKRS];
+#endif
 };
 struct audio_cal_info_sp_th_vi_ftm_cfg {
   uint32_t wait_time[SP_V2_NUM_MAX_SPKRS];
@@ -281,9 +296,14 @@ struct audio_cal_info_lsm {
   int32_t path;
   int32_t app_type;
 };
+#define VSS_NUM_CHANNELS_MAX 8
 struct audio_cal_info_voc_top {
   int32_t topology;
   int32_t acdb_id;
+#ifdef TOPOLOGY_SPECIFIC_CHANNEL_INFO
+  uint32_t num_channels;
+  uint8_t channel_mapping[VSS_NUM_CHANNELS_MAX];
+#endif
 };
 struct audio_cal_info_vocproc {
   int32_t tx_acdb_id;

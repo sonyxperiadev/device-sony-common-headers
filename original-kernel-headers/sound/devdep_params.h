@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
 #ifndef _DEV_DEP_H
 #define _DEV_DEP_H
 
@@ -65,5 +52,15 @@ struct dts_eagle_param_desc {
 	int32_t offset;
 	uint32_t device;
 } __packed;
+
+#define HWDEP_FE_BASE                   3000 /*unique base for FE hw dep nodes*/
+struct snd_pcm_mmap_fd {
+	int32_t dir;
+	int32_t fd;
+	int32_t size;
+	int32_t actual_size;
+};
+
+#define SNDRV_PCM_IOCTL_MMAP_DATA_FD    _IOWR('U', 0xd2, struct snd_pcm_mmap_fd)
 
 #endif

@@ -2,7 +2,7 @@
  *  Video for Linux Two header file
  *
  *  Copyright (C) 1999-2012 the contributors
- *  Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+ *  Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -594,6 +594,14 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_SGRBG12 v4l2_fourcc('B', 'A', '1', '2') /* 12  GRGR.. BGBG.. */
 #define V4L2_PIX_FMT_SRGGB12 v4l2_fourcc('R', 'G', '1', '2') /* 12  RGRG.. GBGB.. */
 #define V4L2_PIX_FMT_SBGGR16 v4l2_fourcc('B', 'Y', 'R', '2') /* 16  BGBG.. GRGR.. */
+#define V4L2_PIX_FMT_SBGGR10DPCM6 v4l2_fourcc('b', 'B', 'A', '6')
+#define V4L2_PIX_FMT_SGBRG10DPCM6 v4l2_fourcc('b', 'G', 'A', '6')
+#define V4L2_PIX_FMT_SGRBG10DPCM6 v4l2_fourcc('B', 'D', '1', '6')
+#define V4L2_PIX_FMT_SRGGB10DPCM6 v4l2_fourcc('b', 'R', 'A', '6')
+#define V4L2_PIX_FMT_SBGGRPLAIN16 v4l2_fourcc('B', 'G', '1', '6')
+#define V4L2_PIX_FMT_SGBRGPLAIN16 v4l2_fourcc('G', 'B', '1', '6')
+#define V4L2_PIX_FMT_SGRBGPLAIN16 v4l2_fourcc('G', 'R', '1', '6')
+#define V4L2_PIX_FMT_SRGGBPLAIN16 v4l2_fourcc('R', 'G', '1', '6')
 
 /* compressed formats */
 #define V4L2_PIX_FMT_MJPEG    v4l2_fourcc('M', 'J', 'P', 'G') /* Motion-JPEG   */
@@ -612,7 +620,10 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /* SMPTE 421M Annex L compliant stream */
 #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8 */
 #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /* VP9 */
+#define V4L2_PIX_FMT_DIVX_311  v4l2_fourcc('D', 'I', 'V', '3') /* DIVX311     */
+#define V4L2_PIX_FMT_DIVX      v4l2_fourcc('D', 'I', 'V', 'X') /* DIVX        */
 #define V4L2_PIX_FMT_HEVC v4l2_fourcc('H', 'E', 'V', 'C') /* for HEVC stream */
+#define V4L2_PIX_FMT_HEVC_HYBRID v4l2_fourcc('H', 'V', 'C', 'H')
 #define V4L2_PIX_FMT_TME v4l2_fourcc('T', 'M', 'E', '0') /* for TME stream */
 
 /*  Vendor-specific formats   */
@@ -1011,11 +1022,16 @@ struct v4l2_buffer {
 #define V4L2_QCOM_BUF_FLAG_CODECCONFIG		0x00020000
 #define V4L2_QCOM_BUF_FLAG_EOSEQ		0x00040000
 #define V4L2_QCOM_BUF_TIMESTAMP_INVALID		0x00080000
+#define V4L2_MSM_BUF_FLAG_MBAFF			0x00100000
 #define V4L2_QCOM_BUF_FLAG_DECODEONLY		0x00200000
 #define V4L2_QCOM_BUF_DATA_CORRUPT		0x00400000
+#define V4L2_QCOM_BUF_DROP_FRAME		0x00800000
 #define V4L2_QCOM_BUF_INPUT_UNSUPPORTED		0x01000000
 #define V4L2_QCOM_BUF_FLAG_EOS			0x02000000
 #define V4L2_QCOM_BUF_FLAG_READONLY		0x04000000
+#define V4L2_MSM_VIDC_BUF_START_CODE_NOT_FOUND	0x08000000
+#define V4L2_MSM_BUF_FLAG_YUV_601_709_CLAMP	0x10000000
+#define V4L2_QCOM_BUF_FLAG_PERF_MODE		0x20000000
 #define V4L2_MSM_BUF_FLAG_DEFER			0x40000000
 #define V4L2_QCOM_BUF_FLAG_IDRFRAME		0x80000000
 
@@ -1612,9 +1628,7 @@ struct v4l2_ext_controls {
 };
 
 #define V4L2_CTRL_ID_MASK      	  (0x0fffffff)
-#ifndef __KERNEL__
 #define V4L2_CTRL_ID2CLASS(id)    ((id) & 0x0fff0000UL)
-#endif
 #define V4L2_CTRL_ID2WHICH(id)    ((id) & 0x0fff0000UL)
 #define V4L2_CTRL_DRIVER_PRIV(id) (((id) & 0xffff) >= 0x1000)
 #define V4L2_CTRL_MAX_DIMS	  (4)
@@ -1691,6 +1705,7 @@ struct v4l2_querymenu {
 #define V4L2_CTRL_FLAG_VOLATILE		0x0080
 #define V4L2_CTRL_FLAG_HAS_PAYLOAD	0x0100
 #define V4L2_CTRL_FLAG_EXECUTE_ON_WRITE	0x0200
+#define V4L2_CTRL_FLAG_MODIFY_LAYOUT	0X0400
 
 /*  Query flags, to be ORed with the control ID */
 #define V4L2_CTRL_FLAG_NEXT_CTRL	0x80000000

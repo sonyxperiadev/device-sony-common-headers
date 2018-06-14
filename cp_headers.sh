@@ -38,17 +38,33 @@ UAPI_HEADERS="\
     linux/mmc/ioctl.h\
     linux/mmc/core.h\
     linux/mmc/mmc.h\
+    media/msm_camera.h\
+    media/msm_cam_sensor.h\
+    media/msm_camsensor_sdk.h\
+    media/msm_fd.h\
+    media/msm_isp.h\
+    media/msm_jpeg.h\
+    media/msm_jpeg_dma.h\
     media/msm_vidc.h\
+    media/msmb_camera.h\
+    media/msmb_generic_buf_mgr.h\
+    media/msmb_isp.h\
+    media/msmb_ispif.h\
+    media/msmb_pproc.h\
     media/msm_media_info.h\
     media/msm_sde_rotator.h\
     video/msm_hdmi_modes.h\
+    scsi/ufs/ufs.h\
+    scsi/ufs/ioctl.h\
+    drm/sde_drm.h\
     asm-generic/ioctls.h"
 
-TECHPACK_HEADERS="\
+TECHPACK_UAPI_HEADERS="\
     sound/audio_effects.h\
     sound/lsm_params.h\
     sound/devdep_params.h\
     sound/msmcal-hwdep.h\
+    sound/voice_params.h\
     linux/msm_audio_calibration.h\
     linux/msm_audio_wmapro.h\
     linux/msm_audio_amrwb.h\
@@ -56,6 +72,9 @@ TECHPACK_HEADERS="\
     linux/msm_audio_wma.h\
     linux/msm_audio_aac.h\
     linux/msm_audio.h"
+
+TECHPACK_IPC_HEADERS="\
+    voice_svc.h"
 
 for x in $STAGING_HEADERS; do \
 cp $HEADER_SRC"../drivers/staging/android/uapi/"$x $HEADER_DST"linux/"$x
@@ -69,8 +88,12 @@ for x in $UAPI_HEADERS; do \
 cp $HEADER_SRC"uapi/"$x $HEADER_DST$x
 done
 
-for x in $TECHPACK_HEADERS; do \
+for x in $TECHPACK_UAPI_HEADERS; do \
 cp $HEADER_SRC"../techpack/audio-kernel/include/uapi/"$x $HEADER_DST$x
+done
+
+for x in $TECHPACK_IPC_HEADERS; do \
+cp $HEADER_SRC"../techpack/audio-kernel/include/ipc/"$x $HEADER_DST/sound/$x
 done
 
 echo "Copy complete!"
