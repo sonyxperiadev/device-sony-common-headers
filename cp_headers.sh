@@ -10,40 +10,28 @@ LINUX_HEADERS="\
 
 UAPI_HEADERS="\
     sound/compress_params.h\
-    sound/audio_effects.h\
-    sound/lsm_params.h\
     sound/compress_offload.h\
-    sound/devdep_params.h\
-    sound/msmcal-hwdep.h\
     sound/asound.h\
-    linux/msm_audio_calibration.h\
     linux/msm_mdp.h\
     linux/msm_mdp_ext.h\
     linux/v4l2-mediabus.h\
     linux/esoc_ctrl.h\
-    linux/msm_audio_wmapro.h\
     linux/mfd/wcd9xxx/wcd9xxx_registers.h\
     linux/mfd/wcd9xxx/wcd9320_registers.h\
     linux/mfd/msm-adie-codec.h\
     linux/msm_rmnet.h\
     linux/msm_ipa.h\
-    linux/msm_audio_amrwbplus.h\
     linux/videodev2.h\
     linux/fuse.h\
     linux/netlink.h\
     linux/msm_kgsl.h\
-    linux/msm_audio_amrwb.h\
-    linux/msm_audio.h\
     linux/msm_dsps.h\
     linux/msm_rotator.h\
     linux/mdss_rotator.h\
-    linux/msm_adsp.h\
     linux/rmnet_data.h\
     linux/qseecom.h\
     linux/spcom.h\
     linux/msm-core-interface.h\
-    linux/msm_audio_wma.h\
-    linux/msm_audio_aac.h\
     linux/v4l2-common.h\
     linux/v4l2-controls.h\
     linux/v4l2-mediabus.h\
@@ -56,6 +44,19 @@ UAPI_HEADERS="\
     video/msm_hdmi_modes.h\
     asm-generic/ioctls.h"
 
+TECHPACK_HEADERS="\
+    sound/audio_effects.h\
+    sound/lsm_params.h\
+    sound/devdep_params.h\
+    sound/msmcal-hwdep.h\
+    linux/msm_audio_calibration.h\
+    linux/msm_audio_wmapro.h\
+    linux/msm_audio_amrwb.h\
+    linux/msm_audio_amrwbplus.h\
+    linux/msm_audio_wma.h\
+    linux/msm_audio_aac.h\
+    linux/msm_audio.h"
+
 for x in $STAGING_HEADERS; do \
 cp $HEADER_SRC"../drivers/staging/android/uapi/"$x $HEADER_DST"linux/"$x
 done
@@ -66,6 +67,10 @@ done
 
 for x in $UAPI_HEADERS; do \
 cp $HEADER_SRC"uapi/"$x $HEADER_DST$x
+done
+
+for x in $TECHPACK_HEADERS; do \
+cp $HEADER_SRC"../techpack/audio-kernel/include/uapi/"$x $HEADER_DST$x
 done
 
 echo "Copy complete!"
