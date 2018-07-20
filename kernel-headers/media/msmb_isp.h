@@ -33,6 +33,7 @@
 #define ISP1_BIT (0x10000 << 2)
 #define ISP_META_CHANNEL_BIT (0x10000 << 3)
 #define ISP_SCRATCH_BUF_BIT (0x10000 << 4)
+#define ISP_PDAF_CHANNEL_BIT (0x10000 << 5)
 #define ISP_OFFLINE_STATS_BIT (0x10000 << 5)
 #define ISP_SVHDR_IN_BIT (0x10000 << 6)
 #define ISP_SVHDR_OUT_BIT (0x10000 << 7)
@@ -262,6 +263,10 @@ struct msm_vfe_axi_plane_cfg {
   uint8_t csid_src;
   uint8_t rdi_cid;
 };
+enum msm_stream_memory_input_t {
+  MEMORY_INPUT_DISABLED,
+  MEMORY_INPUT_ENABLED
+};
 enum msm_stream_rdi_input_type {
   MSM_CAMERA_RDI_MIN,
   MSM_CAMERA_RDI_PDAF,
@@ -284,6 +289,24 @@ struct msm_vfe_axi_stream_request_cmd {
   uint32_t controllable_output;
   uint32_t burst_len;
   enum msm_stream_rdi_input_type rdi_input_type;
+};
+struct msm_vfe32_axi_stream_request_cmd {
+  uint32_t session_id;
+  uint32_t stream_id;
+  uint32_t vt_enable;
+  uint32_t output_format;
+  enum msm_vfe_axi_stream_src stream_src;
+  struct msm_vfe_axi_plane_cfg plane_cfg[MAX_PLANES_PER_STREAM];
+  uint32_t burst_count;
+  uint32_t hfr_mode;
+  uint8_t frame_base;
+  uint32_t init_frame_drop;
+  enum msm_vfe_frame_skip_pattern frame_skip_pattern;
+  uint8_t buf_divert;
+  uint32_t axi_stream_handle;
+  uint32_t controllable_output;
+  uint32_t burst_len;
+  enum msm_stream_memory_input_t memory_input;
 };
 struct msm_vfe_axi_stream_release_cmd {
   uint32_t stream_handle;
@@ -553,7 +576,9 @@ enum msm_isp_event_idx {
   ISP_PING_PONG_MISMATCH = 12,
   ISP_REG_UPDATE_MISSING = 13,
   ISP_BUF_FATAL_ERROR = 14,
-  ISP_EVENT_MAX = 15
+  ISP_EVENT_MAX = 15,
+  ISP_WM_BUS_OVERFLOW = 16,
+  ISP_CAMIF_ERROR = 17,
 };
 #define ISP_EVENT_OFFSET 8
 #define ISP_EVENT_BASE (V4L2_EVENT_PRIVATE_START)
@@ -582,6 +607,7 @@ enum msm_isp_event_idx {
 #define ISP_EVENT_REG_UPDATE_MISSING (ISP_EVENT_BASE + ISP_REG_UPDATE_MISSING)
 #define ISP_EVENT_BUF_FATAL_ERROR (ISP_EVENT_BASE + ISP_BUF_FATAL_ERROR)
 #define ISP_EVENT_STREAM_UPDATE_DONE (ISP_STREAM_EVENT_BASE)
+#define ISP_EVENT_WM_BUS_OVERFLOW (ISP_EVENT_BASE + ISP_WM_BUS_OVERFLOW)
 struct msm_isp_buf_event {
   uint32_t session_id;
   uint32_t stream_id;
@@ -621,6 +647,9 @@ struct msm_isp_error_info {
   uint32_t stream_id;
   uint32_t stream_id_mask;
 };
+struct msm_isp32_error_info {
+  uint32_t error_mask;
+};
 struct msm_isp_ms_delta_info {
   uint8_t num_delta_info;
   uint32_t delta[MS_NUM_SLAVE_MAX];
@@ -654,6 +683,18 @@ struct msm_isp_event_data {
     struct msm_isp_output_info output_info;
     struct msm_isp_sof_info sof_info;
   } u;
+};
+struct msm_isp32_event_data {
+  struct timeval timestamp;
+  struct timeval mono_timestamp;
+  enum msm_vfe_input_src input_intf;
+  uint32_t frame_id;
+  union {
+    struct msm_isp_stats_event stats;
+    struct msm_isp_buf_event buf_done;
+    struct msm_isp32_error_info error_info;
+  } u;
+  uint32_t is_skip_pproc;
 };
 enum msm_vfe_ahb_clk_vote {
   MSM_ISP_CAMERA_AHB_SVS_VOTE = 1,
@@ -698,6 +739,10 @@ struct msm_vfe_dual_lpm_mode {
 #define V4L2_PIX_FMT_P16GBRG10 v4l2_fourcc('P', 'G', 'B', '0')
 #define V4L2_PIX_FMT_P16GRBG10 v4l2_fourcc('P', 'G', 'R', '0')
 #define V4L2_PIX_FMT_P16RGGB10 v4l2_fourcc('P', 'R', 'G', '0')
+#define V4L2_PIX_FMT_P16BGGR12 v4l2_fourcc('P', 'B', 'G', '2')
+#define V4L2_PIX_FMT_P16GBRG12 v4l2_fourcc('P', 'G', 'B', '2')
+#define V4L2_PIX_FMT_P16GRBG12 v4l2_fourcc('P', 'G', 'R', '2')
+#define V4L2_PIX_FMT_P16RGGB12 v4l2_fourcc('P', 'R', 'G', '2')
 #define V4L2_PIX_FMT_NV14 v4l2_fourcc('N', 'V', '1', '4')
 #define V4L2_PIX_FMT_NV41 v4l2_fourcc('N', 'V', '4', '1')
 #define V4L2_PIX_FMT_META v4l2_fourcc('Q', 'M', 'E', 'T')
@@ -738,12 +783,14 @@ enum msm_isp_ioctl_cmd_code {
   MSM_ISP_MAP_BUF_START_MULTI_PASS_FE,
   MSM_ISP_REQUEST_BUF_VER2,
   MSM_ISP_DUAL_HW_LPM_MODE,
+  MSM_ISP32_REQUEST_STREAM,
 };
 #define VIDIOC_MSM_VFE_REG_CFG _IOWR('V', MSM_VFE_REG_CFG, struct msm_vfe_cfg_cmd2)
 #define VIDIOC_MSM_ISP_REQUEST_BUF _IOWR('V', MSM_ISP_REQUEST_BUF, struct msm_isp_buf_request)
 #define VIDIOC_MSM_ISP_ENQUEUE_BUF _IOWR('V', MSM_ISP_ENQUEUE_BUF, struct msm_isp_qbuf_info)
 #define VIDIOC_MSM_ISP_RELEASE_BUF _IOWR('V', MSM_ISP_RELEASE_BUF, struct msm_isp_buf_request)
 #define VIDIOC_MSM_ISP_REQUEST_STREAM _IOWR('V', MSM_ISP_REQUEST_STREAM, struct msm_vfe_axi_stream_request_cmd)
+#define VIDIOC_MSM_ISP32_REQUEST_STREAM _IOWR('V', MSM_ISP32_REQUEST_STREAM, struct msm_vfe32_axi_stream_request_cmd)
 #define VIDIOC_MSM_ISP_CFG_STREAM _IOWR('V', MSM_ISP_CFG_STREAM, struct msm_vfe_axi_stream_cfg_cmd)
 #define VIDIOC_MSM_ISP_RELEASE_STREAM _IOWR('V', MSM_ISP_RELEASE_STREAM, struct msm_vfe_axi_stream_release_cmd)
 #define VIDIOC_MSM_ISP_INPUT_CFG _IOWR('V', MSM_ISP_INPUT_CFG, struct msm_vfe_input_cfg)
@@ -769,5 +816,6 @@ enum msm_isp_ioctl_cmd_code {
 #define VIDIOC_MSM_ISP_FETCH_ENG_MULTI_PASS_START _IOWR('V', MSM_ISP_FETCH_ENG_MULTI_PASS_START, struct msm_vfe_fetch_eng_multi_pass_start)
 #define VIDIOC_MSM_ISP_MAP_BUF_START_MULTI_PASS_FE _IOWR('V', MSM_ISP_MAP_BUF_START_MULTI_PASS_FE, struct msm_vfe_fetch_eng_multi_pass_start)
 #define VIDIOC_MSM_ISP_REQUEST_BUF_VER2 _IOWR('V', MSM_ISP_REQUEST_BUF_VER2, struct msm_isp_buf_request_ver2)
+#define VIDIOC_MSM_ISP_BUF_DONE _IOWR('V', BASE_VIDIOC_PRIVATE + 21, struct msm_isp32_event_data)
 #define VIDIOC_MSM_ISP_DUAL_HW_LPM_MODE _IOWR('V', MSM_ISP_DUAL_HW_LPM_MODE, struct msm_vfe_dual_lpm_mode)
 #endif

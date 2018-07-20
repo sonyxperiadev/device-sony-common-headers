@@ -89,11 +89,11 @@ cp $HEADER_SRC"uapi/"$x $HEADER_DST$x
 done
 
 for x in $TECHPACK_UAPI_HEADERS; do \
-cp $HEADER_SRC"../techpack/audio-kernel/include/uapi/"$x $HEADER_DST$x
+cp $HEADER_SRC"../techpack/audio/include/uapi/"$x $HEADER_DST$x
 done
 
 for x in $TECHPACK_IPC_HEADERS; do \
-cp $HEADER_SRC"../techpack/audio-kernel/include/ipc/"$x $HEADER_DST/sound/$x
+cp $HEADER_SRC"../techpack/audio/include/ipc/"$x $HEADER_DST/sound/$x
 done
 
 echo "Copy complete!"

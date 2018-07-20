@@ -86,6 +86,11 @@
 #define IPA_IOCTL_ALLOC_IPV6CT_TABLE 53
 #define IPA_IOCTL_DEL_NAT_TABLE 54
 #define IPA_IOCTL_DEL_IPV6CT_TABLE 55
+#define IPA_IOCTL_CLEANUP 56
+#define IPA_IOCTL_QUERY_WLAN_CLIENT 57
+#define IPA_IOCTL_GET_VLAN_MODE 58
+#define IPA_IOCTL_ADD_BRIDGE_VLAN_MAPPING 59
+#define IPA_IOCTL_DEL_BRIDGE_VLAN_MAPPING 60
 #define IPA_HDR_MAX_SIZE 64
 #define IPA_RESOURCE_NAME_MAX 32
 #define IPA_NUM_PROPS_MAX 35
@@ -284,7 +289,12 @@ enum ipa_per_client_stats_event {
   IPA_PER_CLIENT_STATS_DISCONNECT_EVENT,
   IPA_PER_CLIENT_STATS_EVENT_MAX
 };
-#define IPA_EVENT_MAX_NUM (IPA_PER_CLIENT_STATS_EVENT_MAX)
+enum ipa_vlan_bridge_event {
+  ADD_BRIDGE_VLAN_MAPPING = IPA_PER_CLIENT_STATS_EVENT_MAX,
+  DEL_BRIDGE_VLAN_MAPPING,
+  BRIDGE_VLAN_MAPPING_MAX
+};
+#define IPA_EVENT_MAX_NUM (BRIDGE_VLAN_MAPPING_MAX)
 #define IPA_EVENT_MAX ((int) IPA_EVENT_MAX_NUM)
 enum ipa_rm_resource_name {
   IPA_RM_RESOURCE_Q6_PROD = 0,
@@ -833,6 +843,23 @@ struct ipa_tether_device_info {
   uint32_t num_clients;
   struct ipa_lan_client lan_client[IPA_MAX_NUM_HW_PATH_CLIENTS];
 };
+enum ipa_vlan_ifaces {
+  IPA_VLAN_IF_ETH,
+  IPA_VLAN_IF_RNDIS,
+  IPA_VLAN_IF_ECM
+};
+#define IPA_VLAN_IF_EMAC IPA_VLAN_IF_ETH
+#define IPA_VLAN_IF_MAX (IPA_VLAN_IF_ECM + 1)
+struct ipa_ioc_get_vlan_mode {
+  enum ipa_vlan_ifaces iface;
+  uint32_t is_vlan_mode;
+};
+struct ipa_ioc_bridge_vlan_mapping_info {
+  char bridge_name[IPA_RESOURCE_NAME_MAX];
+  uint16_t vlan_id;
+  uint32_t bridge_ipv4;
+  uint32_t subnet_mask;
+};
 #define IPA_IOC_ADD_HDR _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ADD_HDR, struct ipa_ioc_add_hdr *)
 #define IPA_IOC_DEL_HDR _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_HDR, struct ipa_ioc_del_hdr *)
 #define IPA_IOC_ADD_RT_RULE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ADD_RT_RULE, struct ipa_ioc_add_rt_rule *)
@@ -890,6 +917,11 @@ struct ipa_tether_device_info {
 #define IPA_IOC_DEL_VLAN_IFACE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_VLAN_IFACE, struct ipa_ioc_vlan_iface_info *)
 #define IPA_IOC_ADD_L2TP_VLAN_MAPPING _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ADD_L2TP_VLAN_MAPPING, struct ipa_ioc_l2tp_vlan_mapping_info *)
 #define IPA_IOC_DEL_L2TP_VLAN_MAPPING _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_L2TP_VLAN_MAPPING, struct ipa_ioc_l2tp_vlan_mapping_info *)
+#define IPA_IOC_CLEANUP _IO(IPA_IOC_MAGIC, IPA_IOCTL_CLEANUP)
+#define IPA_IOC_QUERY_WLAN_CLIENT _IO(IPA_IOC_MAGIC, IPA_IOCTL_QUERY_WLAN_CLIENT)
+#define IPA_IOC_GET_VLAN_MODE _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_GET_VLAN_MODE, struct ipa_ioc_get_vlan_mode *)
+#define IPA_IOC_ADD_BRIDGE_VLAN_MAPPING _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_ADD_BRIDGE_VLAN_MAPPING, struct ipa_ioc_bridge_vlan_mapping_info)
+#define IPA_IOC_DEL_BRIDGE_VLAN_MAPPING _IOWR(IPA_IOC_MAGIC, IPA_IOCTL_DEL_BRIDGE_VLAN_MAPPING, struct ipa_ioc_bridge_vlan_mapping_info)
 #define TETH_BRIDGE_IOC_MAGIC 0xCE
 #define TETH_BRIDGE_IOCTL_SET_BRIDGE_MODE 0
 #define TETH_BRIDGE_IOCTL_SET_AGGR_PARAMS 1
