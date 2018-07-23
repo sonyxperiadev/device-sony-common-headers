@@ -56,6 +56,7 @@ UAPI_HEADERS="\
     video/msm_hdmi_modes.h\
     scsi/ufs/ufs.h\
     scsi/ufs/ioctl.h\
+    drm/msm_drm_pp.h\
     drm/sde_drm.h\
     asm-generic/ioctls.h"
 
