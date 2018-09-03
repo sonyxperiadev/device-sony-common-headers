@@ -26,6 +26,8 @@ UAPI_HEADERS="\
     linux/netlink.h\
     linux/msm_kgsl.h\
     linux/msm_dsps.h\
+    linux/msm_vidc_dec.h\
+    linux/msm_vidc_enc.h\
     linux/msm_rotator.h\
     linux/mdss_rotator.h\
     linux/rmnet_data.h\
