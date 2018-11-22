@@ -23,6 +23,7 @@ UAPI_HEADERS="\
     linux/msm_ipa.h\
     linux/videodev2.h\
     linux/fuse.h\
+    linux/ipa_qmi_service_v01.h\
     linux/netlink.h\
     linux/msm_kgsl.h\
     linux/msm_dsps.h\
@@ -31,6 +32,7 @@ UAPI_HEADERS="\
     linux/msm_rotator.h\
     linux/mdss_rotator.h\
     linux/rmnet_data.h\
+    linux/rmnet_ipa_fd_ioctl.h\
     linux/qseecom.h\
     linux/spcom.h\
     linux/msm-core-interface.h\
