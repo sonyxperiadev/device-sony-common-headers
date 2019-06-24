@@ -29,6 +29,7 @@
 #define IPA_NAT_DEV_NAME "ipaNatTable"
 #define IPA_IPV6CT_DEV_NAME "ipaIpv6CTTable"
 #define IPA_DFLT_RT_TBL_NAME "ipa_dflt_rt"
+#define IPAHAL_NAT_INVALID_PROTOCOL 0xFF
 #define IPA_IOCTL_ADD_HDR 0
 #define IPA_IOCTL_DEL_HDR 1
 #define IPA_IOCTL_ADD_RT_RULE 2
