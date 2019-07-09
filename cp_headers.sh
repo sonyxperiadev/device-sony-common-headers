@@ -16,26 +16,21 @@ UAPI_HEADERS="\
     linux/msm_mdp_ext.h\
     linux/v4l2-mediabus.h\
     linux/esoc_ctrl.h\
-    linux/mfd/wcd9xxx/wcd9xxx_registers.h\
-    linux/mfd/wcd9xxx/wcd9320_registers.h\
-    linux/mfd/msm-adie-codec.h\
     linux/msm_rmnet.h\
     linux/msm_ipa.h\
     linux/videodev2.h\
+    linux/fb.h\
     linux/fuse.h\
     linux/ipa_qmi_service_v01.h\
     linux/netlink.h\
     linux/msm_kgsl.h\
     linux/msm_dsps.h\
-    linux/msm_vidc_dec.h\
-    linux/msm_vidc_enc.h\
     linux/msm_rotator.h\
     linux/mdss_rotator.h\
     linux/rmnet_data.h\
     linux/rmnet_ipa_fd_ioctl.h\
     linux/qseecom.h\
     linux/spcom.h\
-    linux/msm-core-interface.h\
     linux/v4l2-common.h\
     linux/v4l2-controls.h\
     linux/v4l2-mediabus.h\
@@ -49,7 +44,6 @@ UAPI_HEADERS="\
     media/msm_isp.h\
     media/msm_jpeg.h\
     media/msm_jpeg_dma.h\
-    media/msm_vidc.h\
     media/msmb_camera.h\
     media/msmb_generic_buf_mgr.h\
     media/msmb_isp.h\
@@ -71,6 +65,8 @@ TECHPACK_UAPI_HEADERS="\
     sound/devdep_params.h\
     sound/msmcal-hwdep.h\
     sound/voice_params.h\
+    linux/mfd/wcd9xxx/wcd9xxx_registers.h\
+    linux/mfd/wcd9xxx/wcd9320_registers.h\
     linux/msm_audio_calibration.h\
     linux/msm_audio_wmapro.h\
     linux/msm_audio_amrwb.h\
