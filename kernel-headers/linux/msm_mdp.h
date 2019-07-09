@@ -92,13 +92,15 @@
 #define MDSS_MDP_HW_REV_109 MDSS_MDP_REV(1, 9, 0)
 #define MDSS_MDP_HW_REV_110 MDSS_MDP_REV(1, 10, 0)
 #define MDSS_MDP_HW_REV_200 MDSS_MDP_REV(2, 0, 0)
+#define MDSS_MDP_HW_REV_111 MDSS_MDP_REV(1, 11, 0)
 #define MDSS_MDP_HW_REV_112 MDSS_MDP_REV(1, 12, 0)
 #define MDSS_MDP_HW_REV_114 MDSS_MDP_REV(1, 14, 0)
 #define MDSS_MDP_HW_REV_115 MDSS_MDP_REV(1, 15, 0)
 #define MDSS_MDP_HW_REV_116 MDSS_MDP_REV(1, 16, 0)
-#define MDSS_MDP_HW_REV_117 MDSS_MDP_REV(1, 17, 0)
 #define MDSS_MDP_HW_REV_300 MDSS_MDP_REV(3, 0, 0)
 #define MDSS_MDP_HW_REV_301 MDSS_MDP_REV(3, 0, 1)
+#define MDSS_MDP_HW_REV_320 MDSS_MDP_REV(3, 2, 0)
+#define MDSS_MDP_HW_REV_330 MDSS_MDP_REV(3, 3, 0)
 enum {
   NOTIFY_UPDATE_INIT,
   NOTIFY_UPDATE_DEINIT,
@@ -429,6 +431,10 @@ struct mdp_pa_mem_col_cfg {
   uint32_t hue_region;
   uint32_t sat_region;
   uint32_t val_region;
+  uint32_t color_adjust_p2;
+  uint32_t blend_gain;
+  uint8_t sat_hold;
+  uint8_t val_hold;
 };
 #define MDP_SIX_ZONE_LUT_SIZE 384
 #define MDP_PP_PA_HUE_ENABLE 0x10
@@ -1091,6 +1097,8 @@ enum {
   MDP_IOMMU_DOMAIN_CP,
   MDP_IOMMU_DOMAIN_NS,
 };
+#define MDP_CSC_ITU_R_2020 (MDP_CSC_ITU_R_709 + 1)
+#define MDP_CSC_ITU_R_2020_FR (MDP_CSC_ITU_R_2020 + 1)
 enum {
   MDP_WRITEBACK_MIRROR_OFF,
   MDP_WRITEBACK_MIRROR_ON,
