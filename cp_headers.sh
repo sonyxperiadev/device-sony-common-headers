@@ -55,6 +55,7 @@ UAPI_HEADERS="\
     scsi/ufs/ufs.h\
     scsi/ufs/ioctl.h\
     drm/msm_drm.h\
+    drm/drm_fourcc.h\
     drm/msm_drm_pp.h\
     drm/sde_drm.h\
     asm-generic/ioctls.h"
