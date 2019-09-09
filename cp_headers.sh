@@ -53,6 +53,7 @@ UAPI_HEADERS="\
     media/msmb_pproc.h\
     media/msm_media_info.h\
     media/msm_sde_rotator.h\
+    media/msm_vidc_utils.h\
     video/msm_hdmi_modes.h\
     scsi/ufs/ufs.h\
     scsi/ufs/ioctl.h\
