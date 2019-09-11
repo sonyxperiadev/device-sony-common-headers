@@ -293,4 +293,18 @@ struct drm_msm_pa_dither {
   __u32 offset_en;
   __u32 matrix[DITHER_MATRIX_SZ];
 };
+#define DRM_MSM_AD4_ROI
+struct drm_msm_ad4_roi_cfg {
+  __u32 h_x;
+  __u32 h_y;
+  __u32 v_x;
+  __u32 v_y;
+  __u32 factor_in;
+  __u32 factor_out;
+};
+#define DRM_MSM_AD4_MANUAL_STRENGTH
+struct drm_msm_ad4_manual_str_cfg {
+  __u32 in_str;
+  __u32 out_str;
+};
 #endif

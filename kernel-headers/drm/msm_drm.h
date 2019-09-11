@@ -21,6 +21,7 @@
 #include "drm.h"
 #include "sde_drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define MSM_PIPE_NONE 0x00
 #define MSM_PIPE_2D0 0x01
@@ -216,5 +217,6 @@ struct drm_msm_event_resp {
 #define DRM_IOCTL_MSM_DEREGISTER_EVENT DRM_IOW((DRM_COMMAND_BASE + DRM_MSM_DEREGISTER_EVENT), struct drm_msm_event_req)
 #define DRM_IOCTL_MSM_RMFB2 DRM_IOW((DRM_COMMAND_BASE + DRM_MSM_RMFB2), unsigned int)
 #ifdef __cplusplus
+}
 #endif
 #endif
