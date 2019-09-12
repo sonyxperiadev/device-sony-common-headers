@@ -1,5 +1,9 @@
-HEADER_SRC=../kernel/include/
-HEADER_DST=./original-kernel-headers/
+CLEAN_HEADER=bionic/libc/kernel/tools/clean_header.py
+
+KERNEL_PATH=kernel/sony/msm-4.9
+HEADER_SRC=$KERNEL_PATH/kernel/include
+HEADER_ORI=$KERNEL_PATH/common-headers/original-kernel-headers
+HEADER_SAN=$KERNEL_PATH/common-headers/kernel-headers
 
 STAGING_HEADERS="\
     ion.h\
@@ -82,24 +86,29 @@ TECHPACK_UAPI_HEADERS="\
 TECHPACK_IPC_HEADERS="\
     voice_svc.h"
 
-for x in $STAGING_HEADERS; do \
-cp $HEADER_SRC"../drivers/staging/android/uapi/"$x $HEADER_DST"linux/"$x
-done
+cd ../../../..
+
+source build/envsetup.sh
+lunch 38
 
 for x in $LINUX_HEADERS; do \
-cp $HEADER_SRC$x $HEADER_DST$x
+cp $HEADER_SRC/$x $HEADER_ORI/$x
+$CLEAN_HEADER -u -v -k $HEADER_ORI -d $HEADER_SAN $x
 done
 
 for x in $UAPI_HEADERS; do \
-cp $HEADER_SRC"uapi/"$x $HEADER_DST$x
+cp $HEADER_SRC/"uapi/"$x $HEADER_ORI/$x
+$CLEAN_HEADER -u -v -k $HEADER_ORI -d $HEADER_SAN $x
 done
 
 for x in $TECHPACK_UAPI_HEADERS; do \
-cp $HEADER_SRC"../techpack/audio/include/uapi/"$x $HEADER_DST$x
+cp $HEADER_SRC/"../techpack/audio/include/uapi/"$x $HEADER_ORI/$x
+$CLEAN_HEADER -u -v -k $HEADER_ORI -d $HEADER_SAN $x
 done
 
 for x in $TECHPACK_IPC_HEADERS; do \
-cp $HEADER_SRC"../techpack/audio/include/ipc/"$x $HEADER_DST/sound/$x
+cp $HEADER_SRC/"../techpack/audio/include/ipc/"$x $HEADER_ORI/sound/$x
+$CLEAN_HEADER -u -v -k $HEADER_ORI/sound -d $HEADER_SAN/sound $x
 done
 
 echo "Copy complete!"
