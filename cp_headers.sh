@@ -39,6 +39,18 @@ UAPI_HEADERS="\
     linux/mmc/ioctl.h\
     linux/mmc/core.h\
     linux/mmc/mmc.h\
+    media/cam_defs.h\
+    media/cam_sensor.h\
+    media/cam_isp.h\
+    media/cam_isp_ife.h\
+    media/cam_isp_vfe.h\
+    media/cam_icp.h\
+    media/cam_cpas.h\
+    media/cam_fd.h\
+    media/cam_jpeg.h\
+    media/cam_lrme.h\
+    media/cam_req_mgr.h\
+    media/cam_sync.h\
     media/msm_camera.h\
     media/msm_cam_sensor.h\
     media/msm_camsensor_sdk.h\
