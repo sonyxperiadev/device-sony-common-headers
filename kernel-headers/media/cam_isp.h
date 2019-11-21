@@ -83,6 +83,8 @@
 #define CAM_ISP_GENERIC_BLOB_TYPE_FE_CONFIG 5
 #define CAM_ISP_GENERIC_BLOB_TYPE_BW_CONFIG_V2 6
 #define CAM_ISP_GENERIC_BLOB_TYPE_INIT_FRAME_DROP 10
+#define CAM_ISP_GENERIC_BLOB_TYPE_SENSOR_DIMENSION_CONFIG 11
+#define CAM_ISP_GENERIC_BLOB_TYPE_FPS_CONFIG 12
 #define CAM_ISP_USAGE_INVALID 0
 #define CAM_ISP_USAGE_LEFT_PX 1
 #define CAM_ISP_USAGE_RIGHT_PX 2
@@ -226,6 +228,18 @@ struct cam_fe_config {
   uint32_t unpacker_cfg;
   uint32_t latency_buf_size;
 } __attribute__((packed));
+struct cam_isp_sensor_dimension {
+  uint32_t width;
+  uint32_t height;
+  uint32_t measure_enabled;
+} __attribute__((packed));
+struct cam_isp_sensor_config {
+  struct cam_isp_sensor_dimension ppp_path;
+  struct cam_isp_sensor_dimension ipp_path;
+  struct cam_isp_sensor_dimension rdi_path[4];
+  uint32_t hbi;
+  uint32_t vbi;
+} __attribute__((packed));
 struct cam_isp_acquire_hw_info {
   uint16_t common_info_version;
   uint16_t common_info_size;
@@ -236,6 +250,9 @@ struct cam_isp_acquire_hw_info {
   uint32_t input_info_offset;
   uint64_t data;
 };
+struct cam_fps_config {
+  uint32_t fps;
+} __attribute__((packed));
 #define CAM_ISP_ACQUIRE_COMMON_VER0 0x1000
 #define CAM_ISP_ACQUIRE_COMMON_SIZE_VER0 0x0
 #define CAM_ISP_ACQUIRE_INPUT_VER0 0x2000

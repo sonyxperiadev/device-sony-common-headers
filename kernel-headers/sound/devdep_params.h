@@ -18,6 +18,9 @@
  ****************************************************************************/
 #ifndef _DEV_DEP_H
 #define _DEV_DEP_H
+#ifndef __user
+#define __user
+#endif
 struct dolby_param_data {
   int32_t version;
   int32_t device_id;

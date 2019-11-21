@@ -25,6 +25,7 @@
 #define CAM_FLASH_MAX_LED_TRIGGERS 3
 #define MAX_OIS_NAME_SIZE 32
 #define CAM_CSIPHY_SECURE_MODE_ENABLED 1
+#define CAM_IR_LED_SUPPORTED
 struct cam_sensor_query_cap {
   uint32_t slot_info;
   uint32_t secure_camera;
@@ -36,6 +37,7 @@ struct cam_sensor_query_cap {
   uint32_t ois_slot_id;
   uint32_t flash_slot_id;
   uint32_t csiphy_slot_id;
+  uint32_t ir_led_slot_id;
 } __attribute__((packed));
 struct cam_csiphy_query_cap {
   uint32_t slot_info;
@@ -208,5 +210,16 @@ struct cam_flash_query_cap_info {
   uint32_t max_current_flash[CAM_FLASH_MAX_LED_TRIGGERS];
   uint32_t max_duration_flash[CAM_FLASH_MAX_LED_TRIGGERS];
   uint32_t max_current_torch[CAM_FLASH_MAX_LED_TRIGGERS];
+} __attribute__((packed));
+struct cam_ir_led_query_cap_info {
+  uint32_t slot_info;
+} __attribute__((packed));
+struct cam_ir_led_set_on_off {
+  uint16_t reserved;
+  uint8_t opcode;
+  uint8_t cmd_type;
+  uint32_t ir_led_intensity;
+  uint32_t pwm_duty_on_ns;
+  uint32_t pwm_period_ns;
 } __attribute__((packed));
 #endif
