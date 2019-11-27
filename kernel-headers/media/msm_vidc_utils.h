@@ -19,6 +19,13 @@
 #ifndef __MSM_VIDC_UTILS_H__
 #define __MSM_VIDC_UTILS_H__
 #include <linux/types.h>
+#if !defined(VENUS_USES_LEGACY_MISR_INFO)
+ #if defined(CONFIG_ARCH_MSM8916) || defined(CONFIG_ARCH_MSM8996) || \
+     defined(CONFIG_ARCH_MSM8998) || defined(CONFIG_ARCH_SDM630) ||  \
+     defined(CONFIG_ARCH_SDM660)  || defined(CONFIG_ARCH_SDM845)
+	#define VENUS_USES_LEGACY_MISR_INFO
+ #endif
+#endif
 #define MSM_VIDC_HAL_INTERLACE_COLOR_FORMAT_NV12 0x2
 #define MSM_VIDC_HAL_INTERLACE_COLOR_FORMAT_NV12_UBWC 0x8002
 #define MSM_VIDC_EXTRADATA_FRAME_QP_ADV 0x1
@@ -72,13 +79,22 @@ struct msm_vidc_input_crop_payload {
   unsigned int width;
   unsigned int height;
 };
+#ifdef VENUS_USES_LEGACY_MISR_INFO
 struct msm_vidc_misr_info {
-  unsigned int misr_set;
-  unsigned int misr_dpb_luma[8];
-  unsigned int misr_dpb_chroma[8];
-  unsigned int misr_opb_luma[8];
-  unsigned int misr_opb_chroma[8];
+	unsigned int misr_dpb_luma;
+	unsigned int misr_dpb_chroma;
+	unsigned int misr_opb_luma;
+	unsigned int misr_opb_chroma;
 };
+#else
+struct msm_vidc_misr_info {
+	unsigned int misr_set;
+	unsigned int misr_dpb_luma[8];
+	unsigned int misr_dpb_chroma[8];
+	unsigned int misr_opb_luma[8];
+	unsigned int misr_opb_chroma[8];
+};
+#endif
 struct msm_vidc_output_crop_payload {
   unsigned int size;
   unsigned int version;
