@@ -186,6 +186,8 @@ enum kgsl_timestamp_type {
   KGSL_TIMESTAMP_RETIRED = 0x00000002,
   KGSL_TIMESTAMP_QUEUED = 0x00000003,
 };
+#define SPEED_BIN_PROPNUMBER 0x25
+#define KGSL_PROP_GPU_FORCE_ON 0x3f
 #define KGSL_PROP_DEVICE_INFO 0x1
 #define KGSL_PROP_DEVICE_SHADOW 0x2
 #define KGSL_PROP_DEVICE_POWER 0x3
@@ -210,8 +212,9 @@ enum kgsl_timestamp_type {
 #define KGSL_PROP_L3_PWR_CONSTRAINT 0x22
 #define KGSL_PROP_SECURE_BUFFER_ALIGNMENT 0x23
 #define KGSL_PROP_SECURE_CTXT_SUPPORT 0x24
-#define KGSL_PROP_SPEED_BIN 0x25
-#define KGSL_PROP_GPU_FORCE_ON 0x26
+#define KGSL_PROP_SPEED_BIN SPEED_BIN_PROPNUMBER
+#define KGSL_PROP_GAMING_BIN 0x26
+#define KGSL_PROP_CONTEXT_PROPERTY 0x28
 struct kgsl_shadowprop {
   unsigned long gpuaddr;
   size_t size;
@@ -244,6 +247,17 @@ struct kgsl_gpmu_version {
   unsigned int minor;
   unsigned int features;
 };
+struct kgsl_context_property {
+  __u64 data;
+  __u32 size;
+  __u32 type;
+  __u32 contextid;
+};
+struct kgsl_context_property_fault {
+  __s32 faults;
+  __u32 timestamp;
+};
+#define KGSL_CONTEXT_PROP_FAULTS 1
 #define KGSL_PERFCOUNTER_GROUP_CP 0x0
 #define KGSL_PERFCOUNTER_GROUP_RBBM 0x1
 #define KGSL_PERFCOUNTER_GROUP_PC 0x2

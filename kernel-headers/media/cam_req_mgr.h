@@ -138,6 +138,7 @@ struct cam_req_mgr_link_control {
 #define CAM_REQ_MGR_CACHE_OPS (CAM_COMMON_OPCODE_MAX + 12)
 #define CAM_REQ_MGR_LINK_CONTROL (CAM_COMMON_OPCODE_MAX + 13)
 #define CAM_REQ_MGR_LINK_V2 (CAM_COMMON_OPCODE_MAX + 14)
+#define CAM_REQ_MGR_REQUEST_DUMP (CAM_COMMON_OPCODE_MAX + 15)
 #define CAM_MEM_FLAG_HW_READ_WRITE (1 << 0)
 #define CAM_MEM_FLAG_HW_READ_ONLY (1 << 1)
 #define CAM_MEM_FLAG_HW_WRITE_ONLY (1 << 2)
@@ -209,6 +210,7 @@ struct cam_mem_cache_ops_cmd {
 #define CAM_REQ_MGR_ERROR_TYPE_REQUEST 1
 #define CAM_REQ_MGR_ERROR_TYPE_BUFFER 2
 #define CAM_REQ_MGR_ERROR_TYPE_RECOVERY 3
+#define CAM_REQ_MGR_ERROR_TYPE_FULL_RECOVERY 4
 struct cam_req_mgr_error_msg {
   uint32_t error_type;
   uint32_t request_id;

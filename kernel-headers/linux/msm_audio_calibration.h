@@ -101,6 +101,7 @@ enum {
 #define ADM_LSM_AUDPROC_CAL_TYPE ADM_LSM_AUDPROC_CAL_TYPE
 #define ADM_LSM_AUDPROC_PERSISTENT_CAL_TYPE ADM_LSM_AUDPROC_PERSISTENT_CAL_TYPE
 #define LSM_CAL_TYPES
+#define TOPOLOGY_SPECIFIC_CHANNEL_INFO
 #define MSM_SPKR_PROT_SPV3
 enum {
   VERSION_0_0,
@@ -314,10 +315,8 @@ struct audio_cal_info_lsm {
 struct audio_cal_info_voc_top {
   int32_t topology;
   int32_t acdb_id;
-#ifdef TOPOLOGY_SPECIFIC_CHANNEL_INFO
   uint32_t num_channels;
   uint8_t channel_mapping[VSS_NUM_CHANNELS_MAX];
-#endif
 };
 struct audio_cal_info_vocproc {
   int32_t tx_acdb_id;
