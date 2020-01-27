@@ -72,6 +72,7 @@ struct fuse_file_lock {
 #define FOPEN_DIRECT_IO (1 << 0)
 #define FOPEN_KEEP_CACHE (1 << 1)
 #define FOPEN_NONSEEKABLE (1 << 2)
+#define FOPEN_STREAM (1 << 4)
 #define FUSE_ASYNC_READ (1 << 0)
 #define FUSE_POSIX_LOCKS (1 << 1)
 #define FUSE_FILE_OPS (1 << 2)
