@@ -39,7 +39,16 @@
 #define ISP_SVHDR_OUT_BIT (0x10000 << 7)
 #define ISP_STATS_STREAM_BIT 0x80000000
 #define VFE_HW_LIMIT 1
+#define DUAL_ISP_SYNC 1
+#define ISP_KERNEL_STATE 1
 struct msm_vfe_cfg_cmd_list;
+struct isp_kstate {
+  uint32_t kernel_sofid;
+  uint32_t drop_reconfig;
+  uint32_t vfeid;
+  uint32_t dual_cam_drop_detected;
+  uint32_t dual_cam_drop;
+};
 enum ISP_START_PIXEL_PATTERN {
   ISP_BAYER_RGRGRG,
   ISP_BAYER_GRGRGR,
@@ -545,6 +554,7 @@ enum msm_isp_event_mask_index {
   ISP_EVENT_MASK_INDEX_REG_UPDATE_MISSING = 10,
   ISP_EVENT_MASK_INDEX_PING_PONG_MISMATCH = 11,
   ISP_EVENT_MASK_INDEX_BUF_FATAL_ERROR = 12,
+  ISP_EVENT_MASK_INDEX_SOF_UPDATE_NANOSEC = 13,
 };
 #define ISP_EVENT_SUBS_MASK_NONE 0
 #define ISP_EVENT_SUBS_MASK_STATS_NOTIFY (1 << ISP_EVENT_MASK_INDEX_STATS_NOTIFY)
@@ -560,6 +570,7 @@ enum msm_isp_event_mask_index {
 #define ISP_EVENT_SUBS_MASK_REG_UPDATE_MISSING (1 << ISP_EVENT_MASK_INDEX_REG_UPDATE_MISSING)
 #define ISP_EVENT_SUBS_MASK_PING_PONG_MISMATCH (1 << ISP_EVENT_MASK_INDEX_PING_PONG_MISMATCH)
 #define ISP_EVENT_SUBS_MASK_BUF_FATAL_ERROR (1 << ISP_EVENT_MASK_INDEX_BUF_FATAL_ERROR)
+#define ISP_EVENT_SUBS_MASK_SOF_UPDATE_NANOSEC (1 << ISP_EVENT_MASK_INDEX_SOF_UPDATE_NANOSEC)
 enum msm_isp_event_idx {
   ISP_REG_UPDATE = 0,
   ISP_EPOCH_0 = 1,
@@ -596,6 +607,7 @@ enum msm_isp_event_idx {
 #define ISP_EVENT_ERROR (ISP_EVENT_BASE + ISP_ERROR)
 #define ISP_EVENT_SOF (ISP_CAMIF_EVENT_BASE)
 #define ISP_EVENT_EOF (ISP_CAMIF_EVENT_BASE + 1)
+#define ISP_EVENT_SOF_UPDATE_NANOSEC (ISP_CAMIF_EVENT_BASE + 512)
 #define ISP_EVENT_BUF_DONE (ISP_EVENT_BASE + ISP_BUF_DONE)
 #define ISP_EVENT_BUF_DIVERT (ISP_BUF_EVENT_BASE)
 #define ISP_EVENT_STATS_NOTIFY (ISP_STATS_EVENT_BASE)
@@ -684,6 +696,10 @@ struct msm_isp_event_data {
     struct msm_isp_sof_info sof_info;
   } u;
 };
+struct msm_isp_event_data_nanosec {
+  uint64_t nano_timestamp;
+  uint32_t frame_id;
+};
 struct msm_isp32_event_data {
   struct timeval timestamp;
   struct timeval mono_timestamp;
@@ -718,6 +734,12 @@ struct msm_vfe_dual_lpm_mode {
   enum msm_vfe_axi_stream_src stream_src[VFE_AXI_SRC_MAX];
   uint32_t num_src;
   uint32_t lpm_mode;
+};
+struct msm_vfe_dual_vfe_sync_mode {
+  uint32_t enable;
+};
+struct msm_vfe_nano_sec_timestamp {
+  uint32_t enable;
 };
 #define V4L2_PIX_FMT_QBGGR8 v4l2_fourcc('Q', 'B', 'G', '8')
 #define V4L2_PIX_FMT_QGBRG8 v4l2_fourcc('Q', 'G', 'B', '8')
@@ -784,6 +806,9 @@ enum msm_isp_ioctl_cmd_code {
   MSM_ISP_REQUEST_BUF_VER2,
   MSM_ISP_DUAL_HW_LPM_MODE,
   MSM_ISP32_REQUEST_STREAM,
+  MSM_ISP_DUAL_SYNC_CFG,
+  MSM_ISP_DUAL_SYNC_CFG_VER2,
+  MSM_ISP_NANOSEC_TIMESTAMP
 };
 #define VIDIOC_MSM_VFE_REG_CFG _IOWR('V', MSM_VFE_REG_CFG, struct msm_vfe_cfg_cmd2)
 #define VIDIOC_MSM_ISP_REQUEST_BUF _IOWR('V', MSM_ISP_REQUEST_BUF, struct msm_isp_buf_request)
@@ -818,4 +843,7 @@ enum msm_isp_ioctl_cmd_code {
 #define VIDIOC_MSM_ISP_REQUEST_BUF_VER2 _IOWR('V', MSM_ISP_REQUEST_BUF_VER2, struct msm_isp_buf_request_ver2)
 #define VIDIOC_MSM_ISP_BUF_DONE _IOWR('V', BASE_VIDIOC_PRIVATE + 21, struct msm_isp32_event_data)
 #define VIDIOC_MSM_ISP_DUAL_HW_LPM_MODE _IOWR('V', MSM_ISP_DUAL_HW_LPM_MODE, struct msm_vfe_dual_lpm_mode)
+#define VIDIOC_MSM_ISP_DUAL_SYNC_CFG _IOWR('V', MSM_ISP_DUAL_SYNC_CFG, uint32_t *)
+#define VIDIOC_MSM_ISP_DUAL_SYNC_CFG_VER2 _IOWR('V', MSM_ISP_DUAL_SYNC_CFG_VER2, struct msm_vfe_dual_vfe_sync_mode)
+#define VIDIOC_MSM_ISP_NANOSEC_TIMESTAMP _IOW('V', MSM_ISP_NANOSEC_TIMESTAMP, struct msm_vfe_nano_sec_timestamp)
 #endif
