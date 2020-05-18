@@ -82,6 +82,7 @@ TECHPACK_UAPI_HEADERS="\
     sound/devdep_params.h\
     sound/msmcal-hwdep.h\
     sound/voice_params.h\
+    sound/wcd-dsp-glink.h\
     linux/mfd/wcd9xxx/wcd9xxx_registers.h\
     linux/mfd/wcd9xxx/wcd9320_registers.h\
     linux/msm_audio_calibration.h\
