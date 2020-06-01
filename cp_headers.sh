@@ -25,6 +25,7 @@ UAPI_HEADERS="\
     linux/mfd/msm-adie-codec.h\
     linux/msm_rmnet.h\
     linux/msm_ipa.h\
+    linux/msm_ipc.h\
     linux/videodev2.h\
     linux/fuse.h\
     linux/ipa_qmi_service_v01.h\
