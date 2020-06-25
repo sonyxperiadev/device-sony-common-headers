@@ -133,6 +133,10 @@ struct msm_vidc_frame_qp_payload {
   unsigned int skip_num_blocks;
   unsigned int total_num_blocks;
 };
+struct msm_vidc_dts_payload {
+  unsigned int timestamp_hi;
+  unsigned int timestamp_lo;
+};
 struct msm_vidc_frame_bits_info_payload {
   unsigned int frame_bits;
   unsigned int header_bits;
@@ -252,6 +256,7 @@ struct msm_vidc_vui_display_info_payload {
 #define MSM_VIDC_EXTRADATA_METADATA_LTR 0x7F100004
 #define MSM_VIDC_EXTRADATA_METADATA_MBI 0x7F100005
 #define MSM_VIDC_EXTRADATA_VUI_DISPLAY_INFO 0x7F100006
+#define MSM_VIDC_EXTRADATA_ENC_DTS_INFO 0x7F100008
 #define MSM_VIDC_INTERLACE_FRAME_PROGRESSIVE 0x01
 #define MSM_VIDC_INTERLACE_INTERLEAVE_FRAME_TOPFIELDFIRST 0x02
 #define MSM_VIDC_INTERLACE_INTERLEAVE_FRAME_BOTTOMFIELDFIRST 0x04
