@@ -19,6 +19,7 @@ UAPI_HEADERS="\
     linux/v4l2-mediabus.h\
     linux/esoc_ctrl.h\
     linux/msm_rmnet.h\
+    linux/socket.h\
     linux/msm_ipa.h\
     linux/videodev2.h\
     linux/fb.h\
